@@ -1,0 +1,141 @@
+[
+  {
+    "name": "4",
+    "pip": "paus",
+    "value": 11
+  },
+  {
+    "name": "7",
+    "pip": "copas",
+    "value": 10
+  },
+  {
+    "name": "A",
+    "pip": "espadas",
+    "value": 9
+  },
+  {
+    "name": "7",
+    "pip": "ouros",
+    "value": 8
+  },
+  {
+    "name": "coringa",
+    "value": 7
+  },
+  {
+    "name": "3",
+    "pip": "paus",
+    "value": 6
+  },
+  {
+    "name": "3",
+    "pip": "copas",
+    "value": 6
+  },
+  {
+    "name": "3",
+    "pip": "espadas",
+    "value": 6
+  },
+  {
+    "name": "3",
+    "pip": "ouros",
+    "value": 6
+  },
+  {
+    "name": "2",
+    "pip": "paus",
+    "value": 5
+  },
+  {
+    "name": "2",
+    "pip": "copas",
+    "value": 5
+  },
+  {
+    "name": "2",
+    "pip": "espadas",
+    "value": 5
+  },
+  {
+    "name": "2",
+    "pip": "ouros",
+    "value": 5
+  },
+  {
+    "name": "A",
+    "pip": "paus",
+    "value": 4
+  },
+  {
+    "name": "A",
+    "pip": "copas",
+    "value": 4
+  },
+  {
+    "name": "A",
+    "pip": "ouros",
+    "value": 4
+  },
+  {
+    "name": "K",
+    "pip": "paus",
+    "value": 3
+  },
+  {
+    "name": "K",
+    "pip": "copas",
+    "value": 3
+  },
+  {
+    "name": "K",
+    "pip": "espadas",
+    "value": 3
+  },
+  {
+    "name": "K",
+    "pip": "ouros",
+    "value": 3
+  },
+  {
+    "name": "Q",
+    "pip": "paus",
+    "value": 2
+  },
+  {
+    "name": "Q",
+    "pip": "copas",
+    "value": 2
+  },
+  {
+    "name": "Q",
+    "pip": "espadas",
+    "value": 2
+  },
+  {
+    "name": "Q",
+    "pip": "ouros",
+    "value": 2
+  },
+  {
+    "name": "J",
+    "pip": "paus",
+    "value": 1
+  },
+  {
+    "name": "J",
+    "pip": "copas",
+    "value": 1
+  },
+  {
+    "name": "J",
+    "pip": "espadas",
+    "value": 1
+  },
+  {
+    "name": "J",
+    "pip": "ouros",
+    "value": 1
+  }
+]

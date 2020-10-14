@@ -1,3 +1,5 @@
+const deck = require('./deck.json');
+
 class Truco {
   constructor(client, challenger, opponent, channel) {
     this.client = client;
@@ -8,6 +10,8 @@ class Truco {
     this.opponent = {
       user: opponent,
     };
+    this.deck = deck;
+    this.randomizedDeck = this.randomizeDeck(deck);
     this.started = false;
   }
 
@@ -22,6 +26,27 @@ class Truco {
       }
       resolve();
     });
+  }
+
+  randomizeDeck() {
+    function copyDeck(deck) {
+      const newDeck = [];
+      Object.assign(newDeck, deck);
+      return newDeck;
+    }
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    const newDeck = copyDeck(this.deck);
+    const randomizedDeck = [];
+    for (let i = 0; i < 28; i++) {
+      const integer = getRandomInt(newDeck.length);
+      randomizedDeck.push(newDeck[integer]);
+      newDeck.splice(integer, 1);
+    }
+    return randomizedDeck;
   }
 
   start() {
