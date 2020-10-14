@@ -28,7 +28,7 @@ function pass() {
     });
 }
 
-async function fail(condition) {
+function fail(condition) {
   let truco;
   let client;
   let challenger;
