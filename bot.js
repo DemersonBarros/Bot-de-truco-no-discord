@@ -3,7 +3,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const Truco = require('./Truco.js');
-let { prefix } = require('./config.json');
+const { prefix } = require('./config.json');
 
 const client = new Discord.Client();
 
@@ -39,6 +39,7 @@ client.on('message', (msg) => {
             `${game.opponent.user}, ${game.challenger.user} está te desafiando, vai aceitar? (Responda com sim ou não).`
           )
           .catch(console.error);
+        game.destroy = setTimeout();
       })
       .catch((err) => {
         switch (err) {
