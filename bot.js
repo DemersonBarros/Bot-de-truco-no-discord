@@ -39,7 +39,6 @@ client.on('message', (msg) => {
             `${game.opponent.user}, ${game.challenger.user} está te desafiando, vai aceitar? (Responda com sim ou não).`
           )
           .catch(console.error);
-        game.destroy = setTimeout();
       })
       .catch((err) => {
         switch (err) {

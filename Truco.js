@@ -4,14 +4,16 @@ class Truco {
   constructor(client, challenger, opponent, channel) {
     this.client = client;
     this.channel = channel;
+    this.deck = deck;
+    this.randomizedDeck = this.randomizeDeck(deck);
     this.challenger = {
       user: challenger,
+      hand: this.generateHand(),
     };
     this.opponent = {
       user: opponent,
+      hand: this.generateHand(),
     };
-    this.deck = deck;
-    this.randomizedDeck = this.randomizeDeck(deck);
     this.started = false;
   }
 
@@ -49,8 +51,38 @@ class Truco {
     return randomizedDeck;
   }
 
+  generateHand() {
+    const hand = [];
+    for (let i = 0; i < 3; i++) {
+      hand.push(this.randomizedDeck.pop());
+    }
+    return hand;
+  }
+
+  sendHand(player) {
+    player.user.send('Essa é a sua mão:').catch(console.error);
+    for (let i = 0; i < 3; i++) {
+      const card = player.hand[i];
+      if (card.name === 'coringa') {
+        player.user
+          .send(
+            `${i + 1}. ${
+              card.name[0].toUpperCase() + card.name.slice(1, card.name.length)
+            }`
+          )
+          .catch(console.error);
+        continue;
+      }
+      player.user
+        .send(`${i + 1}. ${card.name} de ${card.pip}`)
+        .catch(console.error);
+    }
+  }
+
   start() {
     this.started = true;
+    this.sendHand(this.challenger);
+    this.sendHand(this.opponent);
     console.log('Game started');
   }
 }
