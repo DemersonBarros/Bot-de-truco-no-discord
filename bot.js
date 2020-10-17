@@ -70,6 +70,7 @@ client.on('message', (msg) => {
   }
   if (!game) return;
   if (!game.started) {
+    if (msg.author.id !== game.opponent.user.id) return;
     switch (msg.content) {
       case 'sim':
         game.start();
