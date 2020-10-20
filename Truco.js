@@ -61,7 +61,7 @@ class Truco {
 
   sendHand(player) {
     player.user.send('Essa é a sua mão:').catch(console.error);
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < player.hand.length; i++) {
       const card = player.hand[i];
       if (card.name === 'coringa') {
         player.user
