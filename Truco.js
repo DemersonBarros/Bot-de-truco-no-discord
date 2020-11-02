@@ -6,14 +6,29 @@ class Truco {
     this.channel = channel;
     this.deck = deck;
     this.randomizedDeck = this.randomizeDeck(deck);
+    this.round = 1;
+    this.turn = 0;
+    this.turnValue = 1;
     this.challenger = {
       user: challenger,
       hand: this.generateHand(),
+      selectedCard: null,
+      turnPoints: 0,
+      roundPoints: 0,
     };
     this.opponent = {
       user: opponent,
       hand: this.generateHand(),
+      selectedCard: null,
+      turnPoints: 0,
+      roundPoints: 0,
     };
+    this.challenger.opponent = this.opponent;
+    this.opponent.opponent = this.challenger;
+    this.playerOfTheTime = this.challenger;
+    this.dealer = this.opponent;
+    this.secondToSelectCard = null;
+    this.firstTurnWinner = null;
     this.started = false;
   }
 
@@ -79,10 +94,111 @@ class Truco {
     }
   }
 
+  startTurn() {
+    this.turn++;
+    const opponentCard = this.opponent.selectedCard;
+    const challengerCard = this.challenger.selectedCard;
+    this.challenger.selectedCard = null;
+    this.opponent.selectedCard = null;
+
+    const getTurnWinner = () => {
+      if (opponentCard.value === challengerCard.value) return;
+      return opponentCard.value > challengerCard.value
+        ? this.opponent
+        : this.challenger;
+    };
+
+    const winner = getTurnWinner(opponentCard, challengerCard);
+    if (!winner) {
+      if (this.turn === 1) {
+        this.channel
+          .send('O jogo foi cangado! Joguem suas cartas mais fortes.')
+          .catch(console.error);
+        this.sendHand(this.playerOfTheTime);
+        this.playerOfTheTime = this.secondToSelectCard;
+        this.channel
+          .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
+          .catch(console.error);
+        this.turnValue = 2;
+      } else if (this.turn === 2) {
+        if (this.turnValue === 2) {
+          this.channel
+            .send(
+              'O jogo foi cangado, de novo! Joguem suas cartas mais fortes.'
+            )
+            .catch(console.error);
+          this.sendHand(this.playerOfTheTime);
+          this.playerOfTheTime = this.secondToSelectCard;
+          this.channel
+            .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
+            .catch(console.error);
+        }
+        this.startRound(this.firstTurnWinner);
+      } else if (this.turn === 3) {
+        if (this.turnValue === 2) {
+          this.channel
+            .send('O jogo foi cangado, pela terceira vez!')
+            .catch(console.error);
+          this.startRound(this.dealer);
+          return;
+        }
+        this.startRound(this.firstTurnWinner);
+      }
+      return;
+    }
+
+    winner.turnPoints += this.turnValue;
+    if (winner.turnPoints === 2) {
+      this.startRound(winner);
+      return;
+    }
+    if (this.turn === 1) this.firstTurnWinner = winner;
+    this.sendHand(this.playerOfTheTime);
+    this.playerOfTheTime = winner;
+    this.channel
+      .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
+      .catch(console.error);
+  }
+
+  startRound(winner) {
+    winner.roundPoints++;
+    this.round++;
+    if (winner.roundPoints === 12) {
+      this.channel
+        .send(`${winner.user} ganhou o jogo, parabéns!`)
+        .catch(console.error);
+      return;
+    }
+    this.channel
+      .send(`${winner.user} ganhou a partida, parabéns!`)
+      .catch(console.error);
+    this.turn = 0;
+    this.turnValue = 1;
+    this.opponent.turnPoints = 0;
+    this.challenger.turnPoints = 0;
+    this.challenger.selectedCard = null;
+    this.opponent.selectedCard = null;
+    this.secondToSelectCard = null;
+    this.randomizedDeck = this.randomizeDeck();
+    this.challenger.hand = this.generateHand();
+    this.sendHand(this.challenger);
+    this.opponent.hand = this.generateHand();
+    this.sendHand(this.opponent);
+    this.playerOfTheTime =
+      this.round % 2 !== 0 ? this.challenger : this.opponent;
+    this.dealer = this.playerOfTheTime.opponent;
+    this.channel
+      .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
+      .catch(console.error);
+  }
+
   start() {
     this.started = true;
     this.sendHand(this.challenger);
     this.sendHand(this.opponent);
+    this.channel
+      .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
+      .catch();
     console.log('Game started');
   }
 }

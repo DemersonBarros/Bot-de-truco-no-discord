@@ -87,6 +87,56 @@ client.on('message', (msg) => {
     }
     return;
   }
+
+  if (msg.author.id !== game.playerOfTheTime.user.id) return;
+
+  const cardIndex = Math.floor(msg.content) - 1;
+  if (
+    cardIndex > game.playerOfTheTime.hand.length ||
+    cardIndex < 0 ||
+    Number.isNaN(cardIndex)
+  ) {
+    game.playerOfTheTime.user
+      .send('Por favor, envie uma carta válida.')
+      .catch(console.error);
+    return;
+  }
+
+  const card = game.playerOfTheTime.hand[cardIndex];
+  game.playerOfTheTime.selectedCard = card;
+  game.playerOfTheTime.hand.splice(cardIndex, 1);
+  if (card.name === 'coringa') {
+    game.channel
+      .send(`${game.playerOfTheTime.user} enviou a carta ${card.name}!`)
+      .catch(console.error);
+  } else {
+    game.channel
+      .send(
+        `${game.playerOfTheTime.user} enviou a carta ${card.name} de ${card.pip}`
+      )
+      .catch(console.error);
+  }
+
+  if (game.opponent.selectedCard && game.challenger.selectedCard) {
+    game.startTurn();
+    if (
+      game.challenger.roundPoints === 12 ||
+      game.opponent.roundPoints === 12
+    ) {
+      game = null;
+    }
+    return;
+  }
+
+  if (game.playerOfTheTime.hand.length !== 0) {
+    game.sendHand(game.playerOfTheTime);
+  }
+
+  game.secondToSelectCard = game.playerOfTheTime.opponent;
+  game.playerOfTheTime = game.playerOfTheTime.opponent;
+  game.channel
+    .send(`${game.playerOfTheTime.user} é a sua vez de jogar.`)
+    .catch(console.error);
 });
 
 const TOKEN = fs.readFileSync('./token.txt', {
