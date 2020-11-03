@@ -39,6 +39,12 @@ client.on('message', (msg) => {
             `${game.opponent.user}, ${game.challenger.user} está te desafiando, vai aceitar? (Responda com sim ou não).`
           )
           .catch(console.error);
+        game.selfDestroyCountdown = setTimeout(() => {
+          game.channel.send(
+            `${game.opponent.user} não respondeu, então a partida não vai iniciar.`
+          );
+          game = null;
+        }, 60000);
       })
       .catch((err) => {
         switch (err) {
@@ -70,6 +76,13 @@ client.on('message', (msg) => {
     switch (msg.content) {
       case 'sim':
         game.start();
+        clearTimeout(game.selfDestroyCountdown);
+        game.selfDestroyCountdown = setTimeout(() => {
+          game.channel.send(
+            `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
+          );
+          game = null;
+        }, 60000);
         break;
       case 'nao':
       case 'não':
@@ -85,6 +98,14 @@ client.on('message', (msg) => {
   }
 
   if (msg.author.id !== game.playerOfTheTime.user.id) return;
+
+  clearTimeout(game.selfDestroyCountdown);
+  game.selfDestroyCountdown = setTimeout(() => {
+    game.channel.send(
+      `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
+    );
+    game = null;
+  }, 60000);
 
   const cardIndex = Math.floor(msg.content) - 1;
   if (
