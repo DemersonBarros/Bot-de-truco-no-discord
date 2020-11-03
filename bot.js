@@ -60,11 +60,7 @@ client.on('message', (msg) => {
               .catch(console.error);
             break;
         }
-        game.channel
-          .send(
-            `${game.challenger.user}, infelizmente não foi possível desafiar o seu oponente.`
-          )
-          .catch(console.err);
+        game = null;
       });
     return;
   }

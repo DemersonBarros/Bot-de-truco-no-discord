@@ -38,7 +38,7 @@ class Truco {
         reject('The challenger and opponent is the same person');
       } else if (this.opponent.user.id === this.client.user.id) {
         reject('The opponent is the bot');
-      } else if (this.opponent.user.presence.status !== 'online') {
+      } else if (this.opponent.user.presence.status === 'offline') {
         reject('The opponent is offline');
       }
       resolve();
