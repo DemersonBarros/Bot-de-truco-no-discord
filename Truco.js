@@ -101,7 +101,7 @@ class Truco {
     this.challenger.selectedCard = null;
     this.opponent.selectedCard = null;
 
-    const getTurnWinner = () => {
+    const getTurnWinner = (opponentCard, challengerCard) => {
       if (opponentCard.value === challengerCard.value) return;
       return opponentCard.value > challengerCard.value
         ? this.opponent
