@@ -186,7 +186,7 @@ class Truco {
       return;
     }
     this.channel
-      .send(`${winner.user} ganhou a partida, parabéns!`)
+      .send(`${winner.user} ganhou a rodada, parabéns!`)
       .catch(console.error);
     this.turn = 0;
     this.turnValue = 1;
