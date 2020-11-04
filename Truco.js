@@ -121,19 +121,18 @@ class Truco {
           .catch(console.error);
         this.turnValue = 2;
       } else if (this.turn === 2) {
-        if (this.turnValue === 2) {
-          this.channel
-            .send(
-              'O jogo foi cangado, de novo! Joguem suas cartas mais fortes.'
-            )
-            .catch(console.error);
-          this.sendHand(this.playerOfTheTime);
-          this.playerOfTheTime = this.secondToSelectCard;
-          this.channel
-            .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
-            .catch(console.error);
+        if (this.turnValue !== 2) {
+          this.startRound(this.firstTurnWinner);
+          return;
         }
-        this.startRound(this.firstTurnWinner);
+        this.channel
+          .send('O jogo foi cangado, de novo! Joguem suas cartas mais fortes.')
+          .catch(console.error);
+        this.sendHand(this.playerOfTheTime);
+        this.playerOfTheTime = this.secondToSelectCard;
+        this.channel
+          .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
+          .catch(console.error);
       } else if (this.turn === 3) {
         if (this.turnValue === 2) {
           this.channel
