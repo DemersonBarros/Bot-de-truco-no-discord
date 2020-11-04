@@ -168,7 +168,7 @@ class Truco {
     }
     this.challenger.selectedCard = null;
     this.opponent.selectedCard = null;
-    if (this.turn === 1) this.firstTurnWinner = winner;
+    this.firstTurnWinner = winner;
     this.sendHand(this.playerOfTheTime);
     this.playerOfTheTime = winner;
     this.channel
