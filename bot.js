@@ -101,7 +101,12 @@ client.on('message', (msg) => {
     return;
   }
 
-  if (msg.author.id !== game.playerOfTheTime.user.id) return;
+  if (
+    msg.author.id !== game.playerOfTheTime.user.id ||
+    msg.channel.type !== 'dm'
+  ) {
+    return;
+  }
 
   clearTimeout(game.selfDestroyCountdown);
   game.selfDestroyCountdown = setTimeout(() => {
