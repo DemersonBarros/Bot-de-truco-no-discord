@@ -40,9 +40,11 @@ client.on('message', (msg) => {
           )
           .catch(console.error);
         game.selfDestroyCountdown = setTimeout(() => {
-          game.channel.send(
-            `${game.opponent.user} não respondeu, então a partida não vai iniciar.`
-          );
+          game.channel
+            .send(
+              `${game.opponent.user} não respondeu, então a partida não vai iniciar.`
+            )
+            .catch(console.error);
           game = null;
         }, 60000);
       })
@@ -78,9 +80,11 @@ client.on('message', (msg) => {
         game.start();
         clearTimeout(game.selfDestroyCountdown);
         game.selfDestroyCountdown = setTimeout(() => {
-          game.channel.send(
-            `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
-          );
+          game.channel
+            .send(
+              `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
+            )
+            .catch(console.error);
           game = null;
         }, 60000);
         break;
@@ -101,9 +105,11 @@ client.on('message', (msg) => {
 
   clearTimeout(game.selfDestroyCountdown);
   game.selfDestroyCountdown = setTimeout(() => {
-    game.channel.send(
-      `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
-    );
+    game.channel
+      .send(
+        `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
+      )
+      .catch(console.error);
     game = null;
   }, 60000);
 
