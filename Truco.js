@@ -98,8 +98,6 @@ class Truco {
     this.turn++;
     const opponentCard = this.opponent.selectedCard;
     const challengerCard = this.challenger.selectedCard;
-    this.challenger.selectedCard = null;
-    this.opponent.selectedCard = null;
 
     const getTurnWinner = (opponentCard, challengerCard) => {
       if (opponentCard.value === challengerCard.value) return;
@@ -142,8 +140,25 @@ class Truco {
           return;
         }
         this.startRound(this.firstTurnWinner);
+        return;
       }
+      this.challenger.selectedCard = null;
+      this.opponent.selectedCard = null;
       return;
+    }
+
+    if (winner.selectedCard.name === 'coringa') {
+      this.channel
+        .send(
+          `${winner.user} ganhou o turno com um ${winner.selectedCard.name}!`
+        )
+        .catch(console.error);
+    } else {
+      this.channel
+        .send(
+          `${winner.user} ganhou o turno com um ${winner.selectedCard.name} de ${winner.selectedCard.pip}`
+        )
+        .catch(console.error);
     }
 
     winner.turnPoints += this.turnValue;
@@ -151,6 +166,8 @@ class Truco {
       this.startRound(winner);
       return;
     }
+    this.challenger.selectedCard = null;
+    this.opponent.selectedCard = null;
     if (this.turn === 1) this.firstTurnWinner = winner;
     this.sendHand(this.playerOfTheTime);
     this.playerOfTheTime = winner;
