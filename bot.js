@@ -120,7 +120,7 @@ client.on('message', (msg) => {
 
   const cardIndex = Math.floor(msg.content) - 1;
   if (
-    cardIndex > game.playerOfTheTime.hand.length ||
+    cardIndex > game.playerOfTheTime.hand.length - 1 ||
     cardIndex < 0 ||
     Number.isNaN(cardIndex)
   ) {
