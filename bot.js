@@ -23,7 +23,7 @@ client.on('ready', () => {
 let game;
 
 client.on('message', (msg) => {
-  if (msg.author === client.user) return;
+  if (msg.author.id === client.user.id) return;
   if (msg.content.startsWith(`${prefix}desafiar`)) {
     game = new Truco(
       client,
