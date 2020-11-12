@@ -78,6 +78,7 @@ exports.negar = function (msg) {
       `${game.challenger.user}, infelizmente ${game.opponent.user} não aceitou.`
     )
     .catch(console.error);
+  clearTimeout(game.selfDestroyCountdown);
   game = null;
 };
 
@@ -134,6 +135,7 @@ exports.selecionar = function (msg) {
       game.challenger.roundPoints === 12 ||
       game.opponent.roundPoints === 12
     ) {
+      clearTimeout(game.selfDestroyCountdown);
       game = null;
     }
     return;
