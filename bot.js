@@ -39,8 +39,7 @@ client.on('message', (msg) => {
       .then((commandName) => {
         commands[commandName](msg);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
         msg.reply('por favor, só envie comandos válidos.').catch(console.error);
       });
   }
