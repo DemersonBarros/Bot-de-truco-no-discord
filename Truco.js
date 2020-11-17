@@ -9,6 +9,7 @@ class Truco {
     this.round = 1;
     this.turn = 0;
     this.turnValue = 1;
+    this.roundValue = 1;
     this.challenger = {
       user: challenger,
       hand: this.generateHand(),
@@ -29,6 +30,8 @@ class Truco {
     this.dealer = this.opponent;
     this.secondToSelectCard = null;
     this.firstTurnWinner = null;
+    this.trucado = false;
+    this.trucoAccepted = false;
     this.started = false;
   }
 
@@ -177,9 +180,9 @@ class Truco {
   }
 
   startRound(winner) {
-    winner.roundPoints++;
+    winner.roundPoints += this.roundValue;
     this.round++;
-    if (winner.roundPoints === 12) {
+    if (winner.roundPoints > 11) {
       this.channel
         .send(`${winner.user} ganhou o jogo, parabéns!`)
         .catch(console.error);
