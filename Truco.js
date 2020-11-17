@@ -10,20 +10,7 @@ class Truco {
     this.turn = 0;
     this.turnValue = 1;
     this.roundValue = 1;
-    this.challenger = {
-      user: challenger,
-      hand: this.generateHand(),
-      selectedCard: null,
-      turnPoints: 0,
-      roundPoints: 0,
-    };
-    this.opponent = {
-      user: opponent,
-      hand: this.generateHand(),
-      selectedCard: null,
-      turnPoints: 0,
-      roundPoints: 0,
-    };
+    this.createPlayers(challenger, opponent);
     this.challenger.opponent = this.opponent;
     this.opponent.opponent = this.challenger;
     this.playerOfTheTime = this.challenger;
@@ -33,6 +20,20 @@ class Truco {
     this.trucado = false;
     this.trucoAccepted = false;
     this.started = false;
+  }
+
+  createPlayers(...args) {
+    const players = ['challenger', 'opponent'];
+
+    for (let i = 0; i < 2; i++) {
+      this[players[i]] = {
+        user: args[i],
+        hand: this.generateHand(),
+        selectedCard: null,
+        turnPoints: 0,
+        roundPoints: 0,
+      };
+    }
   }
 
   validatePlayers() {
