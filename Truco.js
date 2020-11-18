@@ -10,6 +10,7 @@ class Truco {
     this.turn = 0;
     this.turnValue = 1;
     this.roundValue = 1;
+    this.familyQuantity = 0;
     this.createPlayers(challenger, opponent);
     this.challenger.opponent = this.opponent;
     this.opponent.opponent = this.challenger;
@@ -100,6 +101,7 @@ class Truco {
 
   startTurn() {
     this.turn++;
+    this.familyQuantity = 0;
     const opponentCard = this.opponent.selectedCard;
     const challengerCard = this.challenger.selectedCard;
 

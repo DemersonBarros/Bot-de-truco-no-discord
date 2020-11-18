@@ -191,6 +191,68 @@ exports.truco = function (msg) {
   );
 };
 
+exports.familia = function (msg) {
+  if (!game || !game.started || game.turn !== 0) return;
+
+  const player =
+    msg.author.id === game.challenger.user.id ? game.challenger : game.opponent;
+
+  if (player.selectedCard) return;
+
+  clearTimeout(game.selfDestroyCountdown);
+  game.selfDestroyCountdown = setTimeout(() => {
+    game.channel
+      .send(
+        `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
+      )
+      .catch(console.error);
+    game = null;
+  }, 60000);
+
+  let weakCardsQuantity = 0;
+
+  if (game.familyQuantity < 3) {
+    for (const card of player.hand) {
+      if (card.value < 6 || card.value === 7) {
+        weakCardsQuantity++;
+      }
+    }
+
+    if (weakCardsQuantity === 3) {
+      game.channel
+        .send(`${player.user} discartou as cartas:`)
+        .catch(console.error);
+      player.hand.forEach((card, index) => {
+        if (card.name === 'coringa') {
+          game.channel.send(`${index + 1}. ${card.name}`).catch(console.error);
+        } else {
+          game.channel
+            .send(`${index + 1}. ${card.name} de ${card.pip}`)
+            .catch(console.error);
+        }
+      });
+
+      game.familyQuantity++;
+      player.hand = game.generateHand();
+      game.sendHand(player);
+      if (game.familyQuantity === 3) {
+        game.channel
+          .send('Não pode ser feito mais nenhum pedido de família.')
+          .catch(console.error);
+        return;
+      }
+      game.channel
+        .send(`Ainda podem ser feitas ${3 - game.familyQuantity} famílias.`)
+        .catch(console.error);
+      return;
+    }
+
+    game.channel.send(`${player.user}, você não pode pedir família.`);
+  }
+};
+
+exports.família = exports.familia;
+
 exports.selecionar = function (msg) {
   if (
     !game ||
