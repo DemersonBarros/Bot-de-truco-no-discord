@@ -1,3 +1,5 @@
+'use strict';
+
 const deck = require('./deck.json');
 
 class Truco {

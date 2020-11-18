@@ -1,3 +1,5 @@
+'use strict';
+
 const Truco = require('./Truco.js');
 
 let game;
