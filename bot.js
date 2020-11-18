@@ -39,7 +39,11 @@ client.on('message', (msg) => {
       .then((commandName) => {
         commands[commandName](msg);
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error.message !== 'Invalid command') {
+          console.error(error);
+          return;
+        }
         msg.reply('por favor, só envie comandos válidos.').catch(console.error);
       });
   }
