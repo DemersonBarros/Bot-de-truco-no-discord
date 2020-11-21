@@ -1,8 +1,47 @@
 'use strict';
 
+const Discord = require('discord.js');
 const Truco = require('./Truco.js');
+const { prefix } = require('./config.json');
 
 let game;
+
+exports.ajuda = function (msg) {
+  const exampleEmbed = new Discord.MessageEmbed()
+    .setColor('#f5f5f5')
+    .setTitle(`\`${prefix}ajuda\``)
+    .setDescription('Mostra todos os comandos e o que eles fazem.')
+    .addFields([
+      {
+        name: `\`${prefix}desafiar <membro>\``,
+        value: 'Desafia o `<membro>` para um 1v1 de truco.',
+      },
+      {
+        name: `\`${prefix}truco <número>\``,
+        value:
+          'O `<número>` pode ser 3, 6, 9 ou 12,\nCaso o `<número>` for 3 ou nenhum, você pede truco.\nCaso o `<número>` for maior que a quantidade de pontos que o round estiver valendo, você aumenta o tanto de pontos que o vencedor do round vai ganhar.',
+      },
+      {
+        name: `\`${prefix}aceitar\``,
+        value: `Aceita algum tipo de desafio, poder ser tanto \`${prefix}truco\` quanto \`${prefix}desafiar\`.`,
+      },
+      {
+        name: `\`${prefix}negar\``,
+        value: `Nega algum tipo de desafio, poder ser tanto \`${prefix}truco\` quanto \`${prefix}desafiar\`.`,
+      },
+      {
+        name: `\`${prefix}família\``,
+        value: `Caso suas cartas forem fracas, você pode pedir \`${prefix}família\` para receber uma nova mão.`,
+      },
+      {
+        name: `\`${prefix}selecionar <indicador>\``,
+        value:
+          'Seleciona a carta que estiver no `<indicador>` para jogar na mesa.\n`<indicador>` é o numero que fica do lado da carta.',
+      },
+    ]);
+
+  msg.channel.send(exampleEmbed);
+};
 
 exports.desafiar = function (msg) {
   game = new Truco(
