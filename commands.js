@@ -53,6 +53,19 @@ exports.ajuda = function (msg) {
         value:
           'Seleciona a carta que estiver no `<indicador>` para jogar na mesa.\n`<indicador>` é o numero que fica do lado da carta.',
       },
+      {
+        name: `\`${prefix}comojogar\``,
+        value: 'Ensina como jogar o jogo.',
+      },
+      {
+        name: `\`${prefix}baralho\``,
+        value:
+          'Mostra o baralho em ordem da carta mais forte para a mais fraca.',
+      },
+      {
+        name: `\`${prefix}cartasfracas\``,
+        value: `Mostra as cartas que você tem que ter para poder pedir \`${prefix}família\`.`,
+      },
     ]);
 
   msg.channel.send(embed).catch(console.error);
