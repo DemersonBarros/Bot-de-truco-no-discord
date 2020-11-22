@@ -7,7 +7,7 @@ const { prefix } = require('./config.json');
 let game;
 
 exports.ajuda = function (msg) {
-  const exampleEmbed = new Discord.MessageEmbed()
+  const embed = new Discord.MessageEmbed()
     .setColor('#f5f5f5')
     .setTitle(`\`${prefix}ajuda\``)
     .setDescription('Mostra todos os comandos e o que eles fazem.')
@@ -40,7 +40,7 @@ exports.ajuda = function (msg) {
       },
     ]);
 
-  msg.channel.send(exampleEmbed).catch(console.error);
+  msg.channel.send(embed).catch(console.error);
 };
 
 exports.desafiar = function (msg) {
