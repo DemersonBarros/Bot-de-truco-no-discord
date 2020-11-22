@@ -58,6 +58,57 @@ exports.ajuda = function (msg) {
   msg.channel.send(embed).catch(console.error);
 };
 
+exports.baralho = function (msg) {
+  const embed = new Discord.MessageEmbed()
+    .setColor('#f5f5f5')
+    .setTitle(`\`${prefix}baralho\``)
+    .addFields([
+      { name: '4 de paus', value: 'A carta mais forte.' },
+      {
+        name: '7 de copas',
+        value: 'Segunda carta mais forte.',
+      },
+      {
+        name: 'A de espadas',
+        value: 'Terceira carta mais forte.',
+      },
+      {
+        name: '7 de ouros',
+        value: 'Quarta carta mais forte.',
+      },
+      {
+        name: 'Coringa',
+        value: 'Quinta carta mais forte.',
+      },
+      {
+        name: '3 de qualquer naipe',
+        value: 'Sexta carta mais forte.',
+      },
+      {
+        name: '2 de qualquer naipe',
+        value: 'Sétima carta mais forte.',
+      },
+      {
+        name: 'Qualquer A menos o de espadas',
+        value: 'Oitava carta mais forte.',
+      },
+      {
+        name: 'K de qualquer naipe',
+        value: 'Nona carta mais forte.',
+      },
+      {
+        name: 'Q de qualquer naipe',
+        value: 'Décima carta mais forte.',
+      },
+      {
+        name: 'J de qualquer naipe',
+        value: 'Décima primeira carta mais forte.',
+      },
+    ]);
+
+  msg.channel.send(embed).catch(console.error);
+};
+
 exports.desafiar = function (msg) {
   game = new Truco(
     msg.client,
