@@ -40,7 +40,7 @@ exports.ajuda = function (msg) {
       },
     ]);
 
-  msg.channel.send(exampleEmbed);
+  msg.channel.send(exampleEmbed).catch(console.error);
 };
 
 exports.desafiar = function (msg) {
@@ -150,9 +150,11 @@ exports.negar = function (msg) {
     !game.trucoAccepted &&
     msg.author.id === game.playerOfTheTime.user.id
   ) {
-    game.channel.send(
-      `${game.playerOfTheTime.user}, não aceitou o pedido de truco do ${game.playerOfTheTime.opponent.user}`
-    );
+    game.channel
+      .send(
+        `${game.playerOfTheTime.user}, não aceitou o pedido de truco do ${game.playerOfTheTime.opponent.user}`
+      )
+      .catch(console.error);
 
     game.roundValue = game.roundValue === 3 ? 1 : game.roundValue - 3;
     clearTimeout(game.selfDestroyCountdown);
@@ -209,9 +211,11 @@ exports.truco = function (msg) {
   if (!game.trucado && (optionalNumber === 3 || Number.isNaN(optionalNumber))) {
     game.roundValue = 3;
     game.trucado = true;
-    game.channel.send(
-      `${game.playerOfTheTime.opponent.user}, ${game.playerOfTheTime.user} está pedindo truco vai aceitar?`
-    );
+    game.channel
+      .send(
+        `${game.playerOfTheTime.opponent.user}, ${game.playerOfTheTime.user} está pedindo truco vai aceitar?`
+      )
+      .catch(console.error);
     game.playerOfTheTime = game.playerOfTheTime.opponent;
     return;
   }
@@ -227,9 +231,11 @@ exports.truco = function (msg) {
 
   game.roundValue += 3;
   game.playerOfTheTime = game.playerOfTheTime.opponent;
-  game.channel.send(
-    `${game.playerOfTheTime.user}, ${game.playerOfTheTime.opponent.user} está pedindo ${game.roundValue}, vai aceitar?`
-  );
+  game.channel
+    .send(
+      `${game.playerOfTheTime.user}, ${game.playerOfTheTime.opponent.user} está pedindo ${game.roundValue}, vai aceitar?`
+    )
+    .catch(console.error);
 };
 
 exports.familia = function (msg) {
@@ -288,7 +294,9 @@ exports.familia = function (msg) {
       return;
     }
 
-    game.channel.send(`${player.user}, você não pode pedir família.`);
+    game.channel
+      .send(`${player.user}, você não pode pedir família.`)
+      .catch(console.error);
   }
 };
 
