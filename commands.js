@@ -109,6 +109,36 @@ exports.baralho = function (msg) {
   msg.channel.send(embed).catch(console.error);
 };
 
+exports.cartasfracas = function (msg) {
+  const embed = new Discord.MessageEmbed()
+    .setColor('#f5f5f5')
+    .setTitle(`\`${prefix}cartasfracas\``)
+    .addFields([
+      {
+        name: 'Coringa',
+        value: 'Quinta carta mais forte.',
+      },
+      {
+        name: 'Qualquer A menos o de espadas',
+        value: 'Oitava carta mais forte.',
+      },
+      {
+        name: 'K de qualquer naipe',
+        value: 'Nona carta mais forte.',
+      },
+      {
+        name: 'Q de qualquer naipe',
+        value: 'Décima carta mais forte.',
+      },
+      {
+        name: 'J de qualquer naipe',
+        value: 'Décima primeira carta mais forte.',
+      },
+    ]);
+
+  msg.channel.send(embed).catch(console.error);
+};
+
 exports.desafiar = function (msg) {
   game = new Truco(
     msg.client,
