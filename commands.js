@@ -6,6 +6,21 @@ const { prefix } = require('./config.json');
 
 let game;
 
+exports.comojogar = function (msg) {
+  const embed = new Discord.MessageEmbed()
+    .setColor('#f5f5f5')
+    .setTitle(`\`${prefix}comojogar\``)
+    .setDescription(`Truco é um jogo, que originalmente é jogado por 4 jogadores, porém o bot, por enquanto, só suporta 2 jogadores.
+  Cada jogador recebe uma mão com 3 cartas. Caso as cartas dos jogadores forem muito fracas, eles podem pedir \`${prefix}família\` antes de selecionar uma carta que o bot vai dar uma nova mão(máximo de três pedidos de família no início da primeiro rodada).
+  Os jogadores vão disputar uma partida com 3 rodadas(melhor de 3). Para ganhar uma rodada o jogador vai ter que jogar uma carta mais forte do que a do outro jogador.
+  O jogador da vez pode pedir \`${prefix}truco\` para aumentar a quantidade de pontos que o vencedor vai ganhar no final das três rodadas.
+  Para ganhar o jogo, é necessário que um dos jogadores tenha mais que 12 pontos.
+  Caso você não saiba qual é o baralho digite \`${prefix}baralho\` para mostrar o baralho na ordem da carta mais forte para a carta mais fraca.
+  Caso você não saiba quais são as cartas que você precisa ter para poder pedir família digite \`${prefix}cartasfracas\` para mostrar quais são as cartas fracas na ordem da mais forte para a mais fraca.`);
+
+  msg.channel.send(embed).catch(console.error);
+};
+
 exports.ajuda = function (msg) {
   const embed = new Discord.MessageEmbed()
     .setColor('#f5f5f5')
