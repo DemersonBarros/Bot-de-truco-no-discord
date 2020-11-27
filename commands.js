@@ -162,11 +162,24 @@ exports.desafiar = function (msg) {
   game
     .validatePlayers()
     .then(() => {
-      game.channel
-        .send(
-          `${game.opponent.user}, ${game.challenger.user} está te desafiando, vai aceitar? (Responda com sim ou não).`
+      const embed = new Discord.MessageEmbed()
+        .setColor('#f5f5f5')
+        .setDescription(
+          `**${game.opponent.user}, você está sendo desafiado por ${game.challenger.user}.**`
         )
-        .catch(console.error);
+        .addFields(
+          {
+            name: 'Como aceitar?',
+            value: `Digite \`${prefix}aceitar\``,
+            inline: true,
+          },
+          {
+            name: 'Como negar?',
+            value: `Digite \`${prefix}negar\``,
+            inline: true,
+          }
+        );
+      game.channel.send(embed).catch(console.error);
       game.selfDestroyCountdown = setTimeout(() => {
         game.channel
           .send(
@@ -316,15 +329,26 @@ exports.truco = function (msg) {
   }, 60000);
 
   const optionalNumber = Math.floor(msg.content.split(' ')[1]);
+  const embed = new Discord.MessageEmbed().setColor('#f5f5f5').addFields(
+    {
+      name: 'Como aceitar?',
+      value: `Digite \`${prefix}aceitar\``,
+      inline: true,
+    },
+    {
+      name: 'Como negar?',
+      value: `Digite \`${prefix}negar\``,
+      inline: true,
+    }
+  );
 
   if (!game.trucado && (optionalNumber === 3 || Number.isNaN(optionalNumber))) {
     game.roundValue = 3;
     game.trucado = true;
-    game.channel
-      .send(
-        `${game.playerOfTheTime.opponent.user}, ${game.playerOfTheTime.user} está pedindo truco vai aceitar?`
-      )
-      .catch(console.error);
+    embed.setDescription(
+      `**${game.playerOfTheTime.opponent.user}, ${game.playerOfTheTime.user} está pedindo truco vai aceitar?**`
+    );
+    game.channel.send(embed).catch(console.error);
     game.playerOfTheTime = game.playerOfTheTime.opponent;
     return;
   }
@@ -340,11 +364,10 @@ exports.truco = function (msg) {
 
   game.roundValue += 3;
   game.playerOfTheTime = game.playerOfTheTime.opponent;
-  game.channel
-    .send(
-      `${game.playerOfTheTime.user}, ${game.playerOfTheTime.opponent.user} está pedindo ${game.roundValue}, vai aceitar?`
-    )
-    .catch(console.error);
+  embed.setDescription(
+    `${game.playerOfTheTime.user}, ${game.playerOfTheTime.opponent.user} está pedindo ${game.roundValue}, vai aceitar?`
+  );
+  game.channel.send(embed).catch(console.error);
 };
 
 exports.familia = function (msg) {
@@ -375,31 +398,33 @@ exports.familia = function (msg) {
     }
 
     if (weakCardsQuantity === 3) {
-      game.channel
-        .send(`${player.user} discartou as cartas:`)
-        .catch(console.error);
+      game.familyQuantity++;
+      let description = '';
       player.hand.forEach((card, index) => {
         if (card.name === 'coringa') {
-          game.channel.send(`${index + 1}. ${card.name}`).catch(console.error);
+          description += `${index + 1}. ${card.name}\n`;
         } else {
-          game.channel
-            .send(`${index + 1}. ${card.name} de ${card.pip}`)
-            .catch(console.error);
+          description += `${index + 1}. ${card.name} de ${card.pip}\n`;
         }
       });
 
-      game.familyQuantity++;
+      if (game.familyQuantity === 3) {
+        description += '\n*Não pode ser feito mais nenhum pedido de família.*';
+      } else {
+        description += `\n*Ainda podem ser pedidas ${
+          3 - game.familyQuantity
+        } famílias.*`;
+      }
+
+      const embed = new Discord.MessageEmbed()
+        .setColor('#f5f5f5')
+        .setTitle(`${player.user.username} discartou as cartas:`)
+        .setDescription(description);
+
       player.hand = game.generateHand();
       game.sendHand(player);
-      if (game.familyQuantity === 3) {
-        game.channel
-          .send('Não pode ser feito mais nenhum pedido de família.')
-          .catch(console.error);
-        return;
-      }
-      game.channel
-        .send(`Ainda podem ser feitas ${3 - game.familyQuantity} famílias.`)
-        .catch(console.error);
+
+      game.channel.send(embed);
       return;
     }
 

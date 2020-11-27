@@ -1,6 +1,8 @@
 'use strict';
 
+const Discord = require('discord.js');
 const deck = require('./deck.json');
+const { prefix } = require('./config.json');
 
 class Truco {
   constructor(client, challenger, opponent, channel) {
@@ -82,23 +84,23 @@ class Truco {
   }
 
   sendHand(player) {
-    player.user.send('Essa é a sua mão:').catch(console.error);
+    let msg = '';
     for (let i = 0; i < player.hand.length; i++) {
       const card = player.hand[i];
       if (card.name === 'coringa') {
-        player.user
-          .send(
-            `${i + 1}. ${
-              card.name[0].toUpperCase() + card.name.slice(1, card.name.length)
-            }`
-          )
-          .catch(console.error);
+        msg += `${i + 1}. ${
+          card.name[0].toUpperCase() + card.name.slice(1, card.name.length)
+        }\n`;
         continue;
       }
-      player.user
-        .send(`${i + 1}. ${card.name} de ${card.pip}`)
-        .catch(console.error);
+      msg += `${i + 1}. ${card.name} de ${card.pip}\n`;
     }
+    msg += `\n**Para selecionar sua carta digite: \`${prefix}selecionar indicador_da_carta\`**.`;
+    const embed = new Discord.MessageEmbed()
+      .setColor('#f5f5f5')
+      .setTitle('Essa é a sua mão:')
+      .setDescription(msg);
+    player.user.send(embed).catch(console.error);
   }
 
   startTurn() {
@@ -195,6 +197,11 @@ class Truco {
     }
     this.channel
       .send(`${winner.user} ganhou a rodada, parabéns!`)
+      .catch(console.error);
+    this.channel
+      .send(
+        `${this.challenger.user} ${this.challenger.roundPoints} x ${this.opponent.roundPoints} ${this.opponent.user}`
+      )
       .catch(console.error);
     this.turn = 0;
     this.turnValue = 1;
