@@ -233,8 +233,7 @@ exports.aceitar = function (msg) {
       .send(`Agora a partida está valendo ${game.roundValue} pontos`)
       .catch(console.error);
 
-    game.playerOfTheTime =
-      game.round % 2 !== 0 ? game.challenger : game.opponent;
+    game.playerOfTheTime = game.trucoRequester;
     clearTimeout(game.selfDestroyCountdown);
     game.selfDestroyCountdown = setTimeout(() => {
       game.channel
@@ -345,6 +344,7 @@ exports.truco = function (msg) {
   if (!game.trucado && (optionalNumber === 3 || Number.isNaN(optionalNumber))) {
     game.roundValue = 3;
     game.trucado = true;
+    game.trucoRequester = game.playerOfTheTime;
     embed.setDescription(
       `**${game.playerOfTheTime.opponent.user}, ${game.playerOfTheTime.user} está pedindo truco vai aceitar?**`
     );
@@ -371,7 +371,14 @@ exports.truco = function (msg) {
 };
 
 exports.familia = function (msg) {
-  if (!game || !game.started || game.turn !== 0) return;
+  if (
+    !game ||
+    !game.started ||
+    game.turn !== 0 ||
+    game.trucado ||
+    game.trucoAccepted
+  )
+    return;
 
   const player =
     msg.author.id === game.challenger.user.id ? game.challenger : game.opponent;

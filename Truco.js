@@ -21,6 +21,7 @@ class Truco {
     this.playerOfTheTime = this.challenger;
     this.dealer = this.opponent;
     this.secondToSelectCard = null;
+    this.trucoRequester = null;
     this.firstTurnWinner = null;
     this.trucado = false;
     this.trucoAccepted = false;
@@ -203,6 +204,7 @@ class Truco {
         `${this.challenger.user} ${this.challenger.roundPoints} x ${this.opponent.roundPoints} ${this.opponent.user}`
       )
       .catch(console.error);
+    this.trucoAccepted = false;
     this.turn = 0;
     this.turnValue = 1;
     this.opponent.turnPoints = 0;
