@@ -2,9 +2,8 @@
 
 const Discord = require('discord.js');
 const Truco = require('./Truco.js');
+const { createMatch, deleteMatch, findMatch } = require('./matchesMethods.js');
 const { prefix } = require('./config.json');
-
-let game;
 
 exports.comojogar = function (msg) {
   const embed = new Discord.MessageEmbed()
@@ -152,13 +151,25 @@ exports.cartasfracas = function (msg) {
   msg.channel.send(embed).catch(console.error);
 };
 
-exports.desafiar = function (msg) {
-  game = new Truco(
+exports.desafiar = function (msg, matches) {
+  if (
+    matches.hasOwnProperty(msg.author.username) ||
+    matches.hasOwnProperty(msg.mentions.users.first().username)
+  ) {
+    return;
+  }
+
+  const game = new Truco(
     msg.client,
     msg.author,
     msg.mentions.users.first(),
     msg.channel
   );
+
+  const challengerUsername = game.challenger.user.username;
+  const OpponentUsername = game.opponent.user.username;
+  createMatch(matches, game, challengerUsername, OpponentUsername);
+
   game
     .validatePlayers()
     .then(() => {
@@ -186,7 +197,7 @@ exports.desafiar = function (msg) {
             `${game.opponent.user} não respondeu, então a partida não vai iniciar.`
           )
           .catch(console.error);
-        game = null;
+        deleteMatch(matches, challengerUsername, OpponentUsername);
       }, 60000);
     })
     .catch((err) => {
@@ -209,13 +220,16 @@ exports.desafiar = function (msg) {
             .catch(console.error);
           break;
       }
-      game = null;
+      deleteMatch(matches, challengerUsername, OpponentUsername);
     });
   return;
 };
 
-exports.aceitar = function (msg) {
+exports.aceitar = function (msg, matches) {
+  const game = findMatch(matches, msg.author.username);
   if (!game) return;
+  const challengerUsername = game.challenger.user.username;
+  const OpponentUsername = game.opponent.user.username;
   if (
     game.started &&
     game.trucado &&
@@ -241,7 +255,7 @@ exports.aceitar = function (msg) {
           `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
         )
         .catch(console.error);
-      game = null;
+      deleteMatch(matches, challengerUsername, OpponentUsername);
     }, 60000);
     return;
   }
@@ -258,12 +272,16 @@ exports.aceitar = function (msg) {
         `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
       )
       .catch(console.error);
-    game = null;
+    deleteMatch(matches, challengerUsername, OpponentUsername);
   }, 60000);
 };
 
-exports.negar = function (msg) {
+exports.negar = function (msg, matches) {
+  const game = findMatch(matches, msg.author.username);
+
   if (!game) return;
+  const challengerUsername = game.challenger.user.username;
+  const OpponentUsername = game.opponent.user.username;
 
   if (
     game.started &&
@@ -285,7 +303,7 @@ exports.negar = function (msg) {
           `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
         )
         .catch(console.error);
-      game = null;
+      deleteMatch(matches, challengerUsername, OpponentUsername);
     }, 60000);
     game.trucoAccepted = false;
     game.trucado = false;
@@ -303,10 +321,11 @@ exports.negar = function (msg) {
     )
     .catch(console.error);
   clearTimeout(game.selfDestroyCountdown);
-  game = null;
+  deleteMatch(matches, challengerUsername, OpponentUsername);
 };
 
-exports.truco = function (msg) {
+exports.truco = function (msg, matches) {
+  const game = findMatch(matches, msg.author.username);
   if (
     !game ||
     !game.started ||
@@ -317,6 +336,9 @@ exports.truco = function (msg) {
     return;
   }
 
+  const challengerUsername = game.challenger.user.username;
+  const OpponentUsername = game.opponent.user.username;
+
   clearTimeout(game.selfDestroyCountdown);
   game.selfDestroyCountdown = setTimeout(() => {
     game.channel
@@ -324,7 +346,7 @@ exports.truco = function (msg) {
         `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
       )
       .catch(console.error);
-    game = null;
+    deleteMatch(matches, challengerUsername, OpponentUsername);
   }, 60000);
 
   const optionalNumber = Math.floor(msg.content.split(' ')[1]);
@@ -370,15 +392,20 @@ exports.truco = function (msg) {
   game.channel.send(embed).catch(console.error);
 };
 
-exports.familia = function (msg) {
+exports.familia = function (msg, matches) {
+  const game = findMatch(matches, msg.author.username);
   if (
     !game ||
     !game.started ||
     game.turn !== 0 ||
     game.trucado ||
     game.trucoAccepted
-  )
+  ) {
     return;
+  }
+
+  const challengerUsername = game.challenger.user.username;
+  const OpponentUsername = game.opponent.user.username;
 
   const player =
     msg.author.id === game.challenger.user.id ? game.challenger : game.opponent;
@@ -392,7 +419,7 @@ exports.familia = function (msg) {
         `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
       )
       .catch(console.error);
-    game = null;
+    deleteMatch(matches, challengerUsername, OpponentUsername);
   }, 60000);
 
   let weakCardsQuantity = 0;
@@ -443,7 +470,8 @@ exports.familia = function (msg) {
 
 exports.família = exports.familia;
 
-exports.selecionar = function (msg) {
+exports.selecionar = function (msg, matches) {
+  const game = findMatch(matches, msg.author.username);
   if (
     !game ||
     !game.started ||
@@ -454,6 +482,9 @@ exports.selecionar = function (msg) {
     return;
   }
 
+  const challengerUsername = game.challenger.user.username;
+  const OpponentUsername = game.opponent.user.username;
+
   clearTimeout(game.selfDestroyCountdown);
   game.selfDestroyCountdown = setTimeout(() => {
     game.channel
@@ -461,7 +492,7 @@ exports.selecionar = function (msg) {
         `${game.playerOfTheTime.user} não respondeu, então a partida está encerrada.`
       )
       .catch(console.error);
-    game = null;
+    deleteMatch(matches, challengerUsername, OpponentUsername);
   }, 60000);
 
   const cardIndex = Math.floor(msg.content.split(' ')[1]) - 1;
@@ -495,7 +526,7 @@ exports.selecionar = function (msg) {
     game.startTurn();
     if (game.challenger.roundPoints > 11 || game.opponent.roundPoints > 11) {
       clearTimeout(game.selfDestroyCountdown);
-      game = null;
+      deleteMatch(matches, challengerUsername, OpponentUsername);
     }
     return;
   }

@@ -31,13 +31,15 @@ function filterCommandName(msg) {
   });
 }
 
+const matches = {};
+
 client.on('message', (msg) => {
   if (msg.author.id === client.user.id) return;
 
   if (msg.content.indexOf(prefix) === 0) {
     filterCommandName(msg)
       .then((commandName) => {
-        commands[commandName](msg);
+        commands[commandName](msg, matches);
       })
       .catch((error) => {
         if (error.message !== 'Invalid command') {
