@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const Discord = require('discord.js');
+const process = require('process');
 const commands = require('./commands.js');
 const { prefix } = require('./config.json');
 
@@ -43,8 +44,7 @@ client.on('message', (msg) => {
       })
       .catch((error) => {
         if (error.message !== 'Invalid command') {
-          console.error(error);
-          return;
+          process.exit(1);
         }
         msg.reply('por favor, só envie comandos válidos.').catch(console.error);
       });
