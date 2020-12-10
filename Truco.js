@@ -4,8 +4,16 @@ const Discord = require('discord.js');
 const deck = require('./deck.json');
 const { prefix } = require('./config.json');
 
+class InvalidParameter extends Error {
+  constructor(msg) {
+    super(msg);
+    this.name = 'InvalidParameter';
+  }
+}
+
 class Truco {
   constructor(client, challenger, opponent, channel) {
+    this.#validateParameters(client, challenger, opponent, channel);
     this.client = client;
     this.channel = channel;
     this.deck = deck;
@@ -26,6 +34,22 @@ class Truco {
     this.trucado = false;
     this.trucoAccepted = false;
     this.started = false;
+  }
+
+  #validateParameters(client, challenger, opponent, channel) {
+    if (!(client instanceof Discord.Client)) {
+      throw new InvalidParameter('client is not an instace of Discord.Client');
+    } else if (!(challenger instanceof Discord.User)) {
+      throw new InvalidParameter(
+        'challenger is not an instace of Discord.User'
+      );
+    } else if (!(opponent instanceof Discord.User)) {
+      throw new InvalidParameter('opponent is not an instace of Discord.User');
+    } else if (!(channel instanceof Discord.TextChannel)) {
+      throw new InvalidParameter(
+        'channel is not an instace of Discord.TextChannel'
+      );
+    }
   }
 
   createPlayers(...args) {
