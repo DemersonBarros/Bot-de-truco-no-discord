@@ -152,19 +152,18 @@ exports.cartasfracas = function (msg) {
 };
 
 exports.desafiar = function (msg, matches) {
+  const mentionedUser = msg.mentions.users.first();
+  if (mentionedUser === undefined) {
+    return;
+  }
   if (
     matches.hasOwnProperty(msg.author.username) ||
-    matches.hasOwnProperty(msg.mentions.users.first().username)
+    matches.hasOwnProperty(mentionedUser.username)
   ) {
     return;
   }
 
-  const game = new Truco(
-    msg.client,
-    msg.author,
-    msg.mentions.users.first(),
-    msg.channel
-  );
+  const game = new Truco(msg.client, msg.author, mentionedUser, msg.channel);
 
   const challengerUsername = game.challenger.user.username;
   const OpponentUsername = game.opponent.user.username;
