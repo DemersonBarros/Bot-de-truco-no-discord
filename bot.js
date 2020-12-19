@@ -1,10 +1,9 @@
 'use strict';
 
-const fs = require('fs');
 const Discord = require('discord.js');
 const process = require('process');
 const commands = require('./commands.js');
-const { prefix } = require('./config.json');
+const config = require('./config.json');
 
 const client = new Discord.Client();
 
@@ -23,7 +22,7 @@ client.on('ready', () => {
 
 function filterCommandName(msg) {
   return new Promise(function (resolve, reject) {
-    let commandName = msg.content.split(' ')[0].slice(prefix.length);
+    let commandName = msg.content.split(' ')[0].slice(config.prefix.length);
     commandName = commandName.toLowerCase();
     if (!commands[commandName]) {
       reject(new Error('Invalid command'));
@@ -37,7 +36,7 @@ const matches = {};
 client.on('message', (msg) => {
   if (msg.author.id === client.user.id) return;
 
-  if (msg.content.indexOf(prefix) === 0) {
+  if (msg.content.indexOf(config.prefix) === 0) {
     filterCommandName(msg)
       .then((commandName) => {
         commands[commandName](msg, matches);
@@ -51,10 +50,7 @@ client.on('message', (msg) => {
   }
 });
 
-const TOKEN = fs.readFileSync('./token.txt', {
-  encoding: 'utf-8',
-});
-
+const TOKEN = config.TOKEN;
 client
   .login(TOKEN)
   .then(() => {
