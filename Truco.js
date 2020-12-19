@@ -255,7 +255,7 @@ class Truco {
     this.sendHand(this.opponent);
     this.channel
       .send(`${this.playerOfTheTime.user} é a sua vez de jogar.`)
-      .catch();
+      .catch(console.log);
     console.log('Game started');
   }
 }
